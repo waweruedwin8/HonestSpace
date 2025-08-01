@@ -9,13 +9,15 @@ export const Footer = () => {
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
-                <Home className="w-5 h-5 text-accent-foreground" />
-              </div>
+              <img
+                src="/logo.png"
+                alt="HonestSpace Logo"
+                className="w-10 h-10"
+              />
               <span className="text-xl font-bold">HonestSpace</span>
             </div>
             <p className="text-primary-foreground/80 leading-relaxed">
-              Africa's rental platform where every listing is verified and every review is real. 
+              World's rental platform where every listing is verified and every review is real. 
               Building trust, one property at a time.
             </p>
             <div className="flex gap-4">
@@ -55,11 +57,16 @@ export const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-accent" />
-                <span className="text-primary-foreground/80">edwin@honestspace.online</span>
+                <a
+                  href="mailto:support@honestspace.online"
+                  className="block text-primary-foreground/80 underline hover:text-accent transition-smooth"
+                >
+                  support@honestspace.online
+                </a>
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-accent" />
-                <span className="text-primary-foreground/80">+254 700 000 000</span>
+                <span className="text-primary-foreground/80">+254 799 030 603</span>
               </div>
               <div className="flex items-center gap-3">
                 <MapPin className="w-4 h-4 text-accent" />
@@ -71,7 +78,7 @@ export const Footer = () => {
         
         <div className="border-t border-primary-foreground/20 mt-12 pt-8 text-center">
           <p className="text-primary-foreground/60">
-            © 2025 HonestSpace. All rights reserved. Building trust in African rentals.
+            © 2025 HonestSpace. All rights reserved. Building trust in rentals.
           </p>
         </div>
       </div>

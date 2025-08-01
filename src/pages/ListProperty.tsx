@@ -35,7 +35,7 @@ const ListProperty = () => {
     },
     {
       name: "Executive",
-      price: "$50",
+      price: "$20",
       description: "For premium properties",
       features: [
         "Up to 20 property listings",
@@ -83,7 +83,7 @@ const ListProperty = () => {
               List Your Property
             </h1>
             <p className="text-xl text-muted-foreground">
-              Join Africa's most trusted rental platform. Pay once, get verified, reach genuine tenants.
+              Join World's most trusted rental platform. Pay once, get verified, reach genuine tenants.
             </p>
           </div>
 
@@ -180,7 +180,7 @@ const ListProperty = () => {
                   <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                   <div>
                     <h4 className="font-semibold text-foreground">Community Trust</h4>
-                    <p className="text-muted-foreground text-sm">Join Africa's most trusted rental platform with verified listings only</p>
+                    <p className="text-muted-foreground text-sm">Join World's most trusted rental platform with verified listings only</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">

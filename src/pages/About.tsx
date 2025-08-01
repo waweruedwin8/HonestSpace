@@ -14,7 +14,7 @@ const About = () => {
                 About HonestSpace
               </h1>
               <p className="text-xl text-muted-foreground">
-                Africa's rental platform where every listing is verified and every review is real
+                Worlds's rental platform where every listing is verified and every review is real
               </p>
             </div>
 
@@ -41,9 +41,9 @@ const About = () => {
                 <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
                   <Globe className="w-8 h-8 text-primary" />
                 </div>
-                <h3 className="text-xl font-semibold text-foreground mb-2">Africa First</h3>
+                <h3 className="text-xl font-semibold text-foreground mb-2">Urban First</h3>
                 <p className="text-muted-foreground">
-                  Built specifically for African rental markets and communities
+                  Built specifically for Urban rental markets and communities
                 </p>
               </div>
             </div>
@@ -52,15 +52,15 @@ const About = () => {
               <h2 className="text-2xl font-bold text-foreground mb-6">Our Story</h2>
               <div className="space-y-4 text-muted-foreground">
                 <p>
-                  HonestSpace was born from a simple frustration: finding honest, verified rental properties in Africa was nearly impossible. 
+                  HonestSpace was born from a simple frustration: finding honest, verified rental properties Online was nearly impossible. 
                   With over 60% of listings being fake or misleading, renters were spending weeks searching for homes that didn't exist.
                 </p>
                 <p>
-                  We realized the solution wasn't just better technology—it was building trust through community. By training local scouts 
-                  to verify every property and gather real insights about neighborhoods, we created Africa's first truly honest rental platform.
+                  We realized the solution wasn't just better technology, it was building trust through community. By training local scouts 
+                  to verify every property and gather real insights about neighborhoods, we created World's first truly honest rental platform.
                 </p>
                 <p>
-                  Today, HonestSpace helps thousands of Africans find real homes with real reviews, while creating jobs for local youth 
+                  Today, HonestSpace helps thousands of tenants find real homes with real reviews, while creating jobs for local youth 
                   as property scouts. Every listing is verified, every review is real, and every scout earns money building trust in their community.
                 </p>
               </div>
@@ -72,7 +72,7 @@ const About = () => {
               </h2>
               <p className="text-primary-foreground/80 mb-6">
                 Whether you're looking for a home or want to help verify properties in your area, 
-                join us in building Africa's most trusted rental platform.
+                join us in building Worlds's most trusted rental platform.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button className="bg-background text-primary px-6 py-3 rounded-lg font-semibold hover:bg-background/90 transition-smooth">

@@ -36,7 +36,7 @@ const HowItWorks = () => {
               How HonestSpace Works
             </h1>
             <p className="text-xl text-muted-foreground">
-              Africa's first rental platform where every listing is verified and every review is real
+              World's first rental platform where every listing is verified and every review is real
             </p>
           </div>
 
@@ -63,7 +63,7 @@ const HowItWorks = () => {
               Ready to Find Your Perfect Home?
             </h2>
             <p className="text-primary-foreground/80 mb-6">
-              Join thousands of Africans who trust HonestSpace for verified, honest rentals
+              Join thousands of Tenants who trust HonestSpace for verified, honest rentals
             </p>
             <button className="bg-background text-primary px-6 py-3 rounded-lg font-semibold hover:bg-background/90 transition-smooth">
               Start Browsing

@@ -14,7 +14,7 @@ const Browse = () => {
               Browse Verified Properties
             </h1>
             <p className="text-lg text-muted-foreground">
-              Find your perfect home from our collection of 100% verified listings across Kenya
+              Find your perfect home from our collection of 100% verified listings across the globe
             </p>
           </div>
           

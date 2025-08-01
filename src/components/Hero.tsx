@@ -21,7 +21,7 @@ export const Hero = () => {
         <div className="max-w-4xl mx-auto">
           
           {/* Trust Indicators */}
-          <div className="flex justify-center items-center gap-6 mb-6">
+          <div className="flex justify-center items-center gap-6 mb-6 mt-16">
             <div className="flex items-center gap-2 bg-background/90 backdrop-blur-sm rounded-full px-4 py-2 shadow-soft">
               <Shield className="w-4 h-4 text-trust" />
               <span className="text-sm font-medium">100% Verified</span>
@@ -47,7 +47,7 @@ export const Hero = () => {
           
           {/* Tagline */}
           <p className="text-xl md:text-2xl text-primary-foreground/90 mb-8 max-w-2xl mx-auto">
-            Africa's rental platform where every listing is verified and every review is real
+            Worlds's rental platform where every listing is verified and every review is real
           </p>
           
           {/* Search Bar */}

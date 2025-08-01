@@ -11,7 +11,7 @@ export const SearchBar = () => {
           <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
           <Input 
             placeholder="Enter location (e.g., Westlands, Nairobi)"
-            className="pl-10 border-0 bg-transparent focus-visible:ring-0 h-12"
+            className="pl-10 border-0 bg-transparent focus-visible:ring-1 focus-visible:ring-trust focus-visible:ring-offset-0 h-12"
           />
         </div>
         
@@ -19,12 +19,12 @@ export const SearchBar = () => {
         <div className="flex-1 relative">
           <Input 
             placeholder="Budget (e.g., KES 20,000 - 50,000)"
-            className="border-0 bg-transparent focus-visible:ring-0 h-12"
+            className="border-0 bg-transparent focus-visible:ring-1 focus-visible:ring-trust focus-visible:ring-offset-0 h-12"
           />
         </div>
         
         {/* Filters Button */}
-        <Button variant="outline" size="lg" className="gap-2">
+        <Button variant="outline" size="lg" className="gap-2 hover:bg-trust hover:text-trust-foreground">
           <Filter className="w-4 h-4" />
           Filters
         </Button>

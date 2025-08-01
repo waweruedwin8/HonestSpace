@@ -37,7 +37,7 @@ const BecomeScout = () => {
               Become a HonestSpace Scout
             </h1>
             <p className="text-xl text-muted-foreground">
-              Help build trust in African rentals while earning money in your local community
+              Help build trust in rentals while earning money in your local community
             </p>
           </div>
 
