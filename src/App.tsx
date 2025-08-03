@@ -9,6 +9,7 @@ import HowItWorks from "./pages/HowItWorks";
 import BecomeScout from "./pages/BecomeScout";
 import About from "./pages/About";
 import ListProperty from "./pages/ListProperty";
+import PropertyDetails from "./pages/PropertyDetails";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/become-scout" element={<BecomeScout />} />
           <Route path="/about" element={<About />} />
           <Route path="/list-property" element={<ListProperty />} />
+          <Route path="/property/:id" element={<PropertyDetails />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
