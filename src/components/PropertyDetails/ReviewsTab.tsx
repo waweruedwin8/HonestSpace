@@ -1,7 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
 
 interface ReviewsTabProps {
   reviews: Array<{
@@ -14,6 +17,13 @@ interface ReviewsTabProps {
 }
 
 export const ReviewsTab = ({ reviews }: ReviewsTabProps) => {
+  const [newRating, setNewRating] = useState(0);
+  const [newReview, setNewReview] = useState("");
+  const [hoveredRating, setHoveredRating] = useState(0);
+  
+  // Mock login state - replace with actual auth
+  const isLoggedIn = true;
+  
   const averageRating = reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
   
   const ratingDistribution = [5, 4, 3, 2, 1].map(rating => ({
@@ -21,6 +31,15 @@ export const ReviewsTab = ({ reviews }: ReviewsTabProps) => {
     count: reviews.filter(review => review.rating === rating).length,
     percentage: (reviews.filter(review => review.rating === rating).length / reviews.length) * 100
   }));
+
+  const handleSubmitReview = () => {
+    if (newRating > 0 && newReview.trim()) {
+      // Handle review submission here
+      console.log({ rating: newRating, review: newReview });
+      setNewRating(0);
+      setNewReview("");
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -74,6 +93,57 @@ export const ReviewsTab = ({ reviews }: ReviewsTabProps) => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Leave a Review */}
+      {isLoggedIn && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Leave a Review</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <label className="text-sm font-medium mb-2 block">Rating</label>
+              <div className="flex items-center gap-1">
+                {[1, 2, 3, 4, 5].map((rating) => (
+                  <button
+                    key={rating}
+                    onMouseEnter={() => setHoveredRating(rating)}
+                    onMouseLeave={() => setHoveredRating(0)}
+                    onClick={() => setNewRating(rating)}
+                    className="transition-colors"
+                  >
+                    <Star
+                      className={`w-6 h-6 ${
+                        rating <= (hoveredRating || newRating)
+                          ? "fill-primary text-primary"
+                          : "text-muted-foreground"
+                      }`}
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+            
+            <div>
+              <label className="text-sm font-medium mb-2 block">Review</label>
+              <Textarea
+                placeholder="Share your experience with this property..."
+                value={newReview}
+                onChange={(e) => setNewReview(e.target.value)}
+                rows={4}
+              />
+            </div>
+            
+            <Button 
+              onClick={handleSubmitReview}
+              disabled={newRating === 0 || !newReview.trim()}
+              className="w-full"
+            >
+              Submit Review
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Individual Reviews */}
       <div className="space-y-4">

@@ -1,5 +1,7 @@
 import { Badge } from "@/components/ui/badge";
-import { Star, MapPin, Shield } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Star, MapPin, Shield, Heart, Flag } from "lucide-react";
+import { useState } from "react";
 
 interface PropertyHeaderProps {
   property: {
@@ -13,6 +15,12 @@ interface PropertyHeaderProps {
 }
 
 export const PropertyHeader = ({ property }: PropertyHeaderProps) => {
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [showReportDialog, setShowReportDialog] = useState(false);
+  
+  // Mock login state - replace with actual auth
+  const isLoggedIn = true;
+
   return (
     <div className="mb-8">
       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
@@ -51,11 +59,36 @@ export const PropertyHeader = ({ property }: PropertyHeaderProps) => {
           </div>
         </div>
         
-        <div className="text-right">
-          <div className="text-3xl font-bold text-primary">
-            KSh {property.price.toLocaleString()}
+        <div className="flex flex-col items-end gap-3">
+          <div className="text-right">
+            <div className="text-3xl font-bold text-primary">
+              KSh {property.price.toLocaleString()}
+            </div>
+            <div className="text-sm text-muted-foreground">per month</div>
           </div>
-          <div className="text-sm text-muted-foreground">per month</div>
+          
+          {isLoggedIn && (
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsBookmarked(!isBookmarked)}
+                className={isBookmarked ? "text-red-500 border-red-200" : ""}
+              >
+                <Heart className={`w-4 h-4 mr-1 ${isBookmarked ? "fill-red-500" : ""}`} />
+                {isBookmarked ? "Saved" : "Save"}
+              </Button>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowReportDialog(true)}
+              >
+                <Flag className="w-4 h-4 mr-1" />
+                Report
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -30,6 +30,29 @@ export const PropertyGallery = ({ images, video, title }: PropertyGalleryProps) 
     <div className="space-y-4">
       {/* Main Image */}
       <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-muted">
+        {/* Navigation Arrows */}
+        {allMedia.length > 1 && (
+          <>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-black/50 text-white hover:bg-black/70 transition-colors"
+              onClick={prevImage}
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </Button>
+            
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-black/50 text-white hover:bg-black/70 transition-colors"
+              onClick={nextImage}
+            >
+              <ChevronRight className="w-5 h-5" />
+            </Button>
+          </>
+        )}
+        
         <Dialog open={isLightboxOpen} onOpenChange={setIsLightboxOpen}>
           <DialogTrigger asChild>
             <div className="relative w-full h-full cursor-pointer group">
