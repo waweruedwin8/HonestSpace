@@ -19,6 +19,11 @@ const PropertyDetails = () => {
     reviewCount: 24,
     images: [
       "/placeholder.svg",
+      "/placeholder.svg", 
+      "/placeholder.svg",
+      "/placeholder.svg",
+      "/placeholder.svg",
+      "/placeholder.svg",
       "/placeholder.svg",
       "/placeholder.svg",
       "/placeholder.svg",
