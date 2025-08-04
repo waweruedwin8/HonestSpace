@@ -1,6 +1,7 @@
-import { SearchBar } from "./SearchBar";
+import { HomeSearchFilters } from "./HomeSearchFilters";
 import { Button } from "./ui/button";
 import { Shield, Users, CheckCircle } from "lucide-react";
+import { Link } from "react-router-dom";
 import heroImage from "@/assets/hero-image.jpg";
 
 export const Hero = () => {
@@ -52,16 +53,16 @@ export const Hero = () => {
           
           {/* Search Bar */}
           <div className="mb-8">
-            <SearchBar />
+            <HomeSearchFilters />
           </div>
           
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button variant="hero" size="lg" className="px-8 py-3 text-lg">
-              Browse Properties
+            <Button asChild variant="hero" size="lg" className="px-8 py-3 text-lg">
+              <Link to="/browse">Browse Properties</Link>
             </Button>
-            <Button variant="outline" size="lg" className="px-8 py-3 text-lg bg-background/90 backdrop-blur-sm border-primary-foreground text-foreground hover:bg-background">
-              List Your Property
+            <Button asChild variant="outline" size="lg" className="px-8 py-3 text-lg bg-background/90 backdrop-blur-sm border-primary-foreground text-foreground hover:bg-background">
+              <Link to="/list-property">List Your Property</Link>
             </Button>
           </div>
           

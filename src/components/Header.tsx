@@ -37,8 +37,8 @@ export const Header = () => {
               <Heart className="w-5 h-5" />
             </Button>
             
-            <Button variant="outline" className="hidden md:flex">
-              Sign In
+            <Button asChild variant="outline" className="hidden md:flex">
+              <Link to="/auth">Sign In</Link>
             </Button>
             
             <Link to="/list-property">

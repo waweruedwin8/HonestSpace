@@ -1,5 +1,6 @@
 import { Shield, Users, CheckCircle, MapPin, Star, Wifi } from "lucide-react";
 import { Button } from "./ui/button";
+import { Link } from "react-router-dom";
 
 const features = [
   {
@@ -76,8 +77,8 @@ export const TrustFeatures = () => {
         </div>
         
         <div className="text-center">
-          <Button variant="hero" size="lg" className="px-12 py-4 text-lg">
-            Join Our Scout Network
+          <Button asChild variant="hero" size="lg" className="px-12 py-4 text-lg">
+            <Link to="/become-scout">Join Our Scout Network</Link>
           </Button>
           <p className="text-muted-foreground mt-4">
             Earn KES 2,000-5,000 monthly by verifying properties in your area

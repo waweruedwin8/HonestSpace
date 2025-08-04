@@ -1,5 +1,6 @@
 import { PropertyCard } from "./PropertyCard";
 import { Button } from "./ui/button";
+import { Link } from "react-router-dom";
 
 // Mock data for featured properties
 const featuredProperties = [
@@ -97,8 +98,8 @@ export const FeaturedProperties = () => {
         </div>
         
         <div className="text-center mt-12">
-          <Button variant="hero" size="lg" className="px-8">
-            View All Properties
+          <Button asChild variant="hero" size="lg" className="px-8">
+            <Link to="/browse">View All Properties</Link>
           </Button>
         </div>
       </div>
