@@ -2,8 +2,11 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { MapPin, DollarSign, Clock, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ScoutApplicationForm } from "@/components/ScoutApplicationForm";
+import { useState } from "react";
 
 const BecomeScout = () => {
+  const [showApplication, setShowApplication] = useState(false);
   const benefits = [
     {
       icon: <DollarSign className="w-6 h-6" />,
@@ -93,12 +96,18 @@ const BecomeScout = () => {
               </div>
             </div>
             <div className="text-center mt-8">
-              <Button variant="trust" size="lg">
+              <Button variant="trust" size="lg" onClick={() => setShowApplication(true)}>
                 Apply to Become a Scout
               </Button>
             </div>
           </div>
         </div>
+        
+        {showApplication && (
+          <div className="container mx-auto px-4 py-16">
+            <ScoutApplicationForm />
+          </div>
+        )}
       </main>
       <Footer />
     </div>

@@ -1,8 +1,12 @@
 import { Button } from "./ui/button";
 import { Menu, Home, User, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
+import { LoveButton } from "./LoveButton";
+import { usePropertySearch } from "@/hooks/usePropertySearch";
 
 export const Header = () => {
+  const { likedProperties } = usePropertySearch();
+  
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
       <div className="container mx-auto px-4">
@@ -33,9 +37,9 @@ export const Header = () => {
               <Menu className="w-5 h-5" />
             </Button>
             
-            <Button variant="ghost" size="icon" className="hidden md:flex">
-              <Heart className="w-5 h-5" />
-            </Button>
+            <div className="hidden md:flex">
+              <LoveButton likedProperties={likedProperties} />
+            </div>
             
             <Button asChild variant="outline" className="hidden md:flex">
               <Link to="/auth">Sign In</Link>

@@ -10,6 +10,7 @@ import BecomeScout from "./pages/BecomeScout";
 import About from "./pages/About";
 import ListProperty from "./pages/ListProperty";
 import PropertyDetails from "./pages/PropertyDetails";
+import LovedProperties from "./pages/LovedProperties";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/list-property" element={<ListProperty />} />
           <Route path="/property/:id" element={<PropertyDetails />} />
+          <Route path="/loved-properties" element={<LovedProperties />} />
           <Route path="/auth" element={<Auth />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
