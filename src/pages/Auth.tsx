@@ -4,16 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Eye, EyeOff, Mail, Phone, User, Building, Shield, Chrome } from "lucide-react";
+import { Eye, EyeOff, Mail, Phone, User, Building, Chrome } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 type UserType = "tenant" | "landlord";
 
@@ -34,18 +33,14 @@ const Auth = () => {
   });
 
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const { isAuthenticated, login, register, googleLogin } = useAuth();
 
   useEffect(() => {
-    // Check if user is already logged in
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        navigate("/");
-      }
-    };
-    checkAuth();
-  }, [navigate]);
+    // Redirect if already authenticated
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -87,39 +82,36 @@ const Auth = () => {
 
     try {
       if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({
-          email: formData.email,
-          password: formData.password,
-        });
+        const { error } = await login(formData.email, formData.password, userType);
         
-        if (error) throw error;
+        if (error) {
+          setError(error);
+          return;
+        }
         
-        toast({
-          title: "Welcome back!",
+        toast.success("Welcome back!", {
           description: "You have successfully signed in.",
         });
         navigate("/");
       } else {
-        const { error } = await supabase.auth.signUp({
+        const { error } = await register({
           email: formData.email,
           password: formData.password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/`,
-            data: {
-              first_name: formData.firstName,
-              last_name: formData.lastName,
-              user_type: userType,
-              phone: formData.phone
-            }
-          }
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          phone: formData.phone,
+          userType: userType
         });
         
-        if (error) throw error;
+        if (error) {
+          setError(error);
+          return;
+        }
         
-        toast({
-          title: "Account created!",
-          description: "Please check your email to verify your account.",
+        toast.success("Account created!", {
+          description: "Welcome to HonestSpace!",
         });
+        navigate("/");
       }
     } catch (error: any) {
       console.error("Auth error:", error);
@@ -131,15 +123,14 @@ const Auth = () => {
 
   const handleGoogleAuth = async () => {
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/`
-        }
-      });
-      if (error) throw error;
+      setLoading(true);
+      // For now, Google OAuth will be handled by the Django backend
+      // This is a placeholder - actual implementation will depend on Google OAuth flow
+      toast.info("Google login will be available once backend is connected");
     } catch (error: any) {
       setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 

@@ -1,7 +1,9 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
+import { apiClient } from "@/lib/api";
 import { FilterState } from "@/components/AdvancedFilters";
 
-interface Property {
+// Mock data interface (keeping existing structure for compatibility)
+interface PropertyMock {
   id: string;
   title: string;
   location: string;
@@ -21,8 +23,10 @@ interface Property {
   dateAvailable: string;
 }
 
-// Mock data - replace with actual API calls
-const generateMockProperties = (): Property[] => {
+// Using FilterState from AdvancedFilters for compatibility
+
+// Mock data generator (keeping for now until Django backend is connected)
+const generateMockProperties = (): PropertyMock[] => {
   const propertyTypes = ["Apartment", "House", "Studio", "Bedsitter", "Maisonette", "Villa"];
   const locations = ["Westlands", "Karen", "Kilimani", "Lavington", "Runda", "Muthaiga", "Kileleshwa", "Parklands"];
   const amenitiesList = ["WiFi", "Parking", "Security", "Swimming Pool", "Gym", "Laundry", "Balcony", "Garden"];
@@ -49,11 +53,13 @@ const generateMockProperties = (): Property[] => {
 };
 
 export const usePropertySearch = () => {
-  const [allProperties] = useState<Property[]>(generateMockProperties());
+  // Using mock data for now - will be replaced with API calls
+  const [allProperties] = useState<PropertyMock[]>(generateMockProperties());
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(12);
   const [likedProperties, setLikedProperties] = useState<string[]>([]);
+  const [apiError, setApiError] = useState<string | null>(null);
   
   const [filters, setFilters] = useState<FilterState>({
     searchText: "",
@@ -70,7 +76,63 @@ export const usePropertySearch = () => {
     sortBy: "relevance"
   });
 
-  // Filter and sort properties
+  // Load liked properties from localStorage (for guest users)
+  useEffect(() => {
+    const savedLikes = localStorage.getItem('likedProperties');
+    if (savedLikes) {
+      try {
+        setLikedProperties(JSON.parse(savedLikes));
+      } catch (error) {
+        console.error('Error loading liked properties:', error);
+      }
+    }
+  }, []);
+
+  // Save liked properties to localStorage
+  useEffect(() => {
+    localStorage.setItem('likedProperties', JSON.stringify(likedProperties));
+  }, [likedProperties]);
+
+  // API function to fetch properties (ready for Django integration)
+  const fetchProperties = useCallback(async () => {
+    try {
+      setLoading(true);
+      setApiError(null);
+      
+      // Convert legacy filters to API format
+      const apiParams = {
+        search: filters.searchText,
+        location: filters.location,
+        minPrice: filters.priceRange[0],
+        maxPrice: filters.priceRange[1],
+        propertyType: filters.propertyType === "Any Type" ? undefined : filters.propertyType,
+        amenities: filters.amenities,
+        page: currentPage,
+        pageSize: itemsPerPage,
+      };
+
+      // When Django backend is ready, uncomment this:
+      // const response = await apiClient.getProperties(apiParams);
+      // return response.data;
+      
+      // For now, use mock data with simulated delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+      return {
+        results: allProperties,
+        count: allProperties.length,
+        next: null,
+        previous: null
+      };
+    } catch (error) {
+      console.error('Error fetching properties:', error);
+      setApiError(error instanceof Error ? error.message : 'Failed to fetch properties');
+      return { results: [], count: 0, next: null, previous: null };
+    } finally {
+      setLoading(false);
+    }
+  }, [filters, currentPage, itemsPerPage, allProperties]);
+
+  // Filter and sort properties (using mock data for now)
   const filteredProperties = useMemo(() => {
     let filtered = allProperties.filter((property) => {
       // Text search
@@ -163,35 +225,53 @@ export const usePropertySearch = () => {
     return filteredProperties.slice(startIndex, startIndex + itemsPerPage);
   }, [filteredProperties, currentPage, itemsPerPage]);
 
-  // Simulate API loading
-  const performSearch = () => {
+  // Search function (ready for API integration)
+  const performSearch = useCallback(async () => {
     setLoading(true);
     setCurrentPage(1);
+    
+    // When Django backend is ready, replace with:
+    // await fetchProperties();
+    
+    // For now, simulate API delay
     setTimeout(() => {
       setLoading(false);
     }, 500);
-  };
+  }, []);
 
-  const handlePageChange = (page: number) => {
+  const handlePageChange = useCallback((page: number) => {
     setLoading(true);
     setCurrentPage(page);
+    
+    // Simulate loading delay
     setTimeout(() => {
       setLoading(false);
     }, 300);
-  };
+  }, []);
 
-  const handleItemsPerPageChange = (items: number) => {
+  const handleItemsPerPageChange = useCallback((items: number) => {
     setItemsPerPage(items);
     setCurrentPage(1);
-  };
+  }, []);
 
-  const toggleLike = (propertyId: string) => {
-    setLikedProperties(prev => 
-      prev.includes(propertyId) 
-        ? prev.filter(id => id !== propertyId)
-        : [...prev, propertyId]
-    );
-  };
+  // Toggle like function (ready for API integration)
+  const toggleLike = useCallback(async (propertyId: string) => {
+    try {
+      // For authenticated users, sync with backend
+      // When Django backend is ready, uncomment:
+      // await apiClient.toggleLike(propertyId);
+      
+      // Update local state
+      setLikedProperties(prev => 
+        prev.includes(propertyId) 
+          ? prev.filter(id => id !== propertyId)
+          : [...prev, propertyId]
+      );
+    } catch (error) {
+      console.error('Error toggling like:', error);
+      // Show error to user but keep local state for better UX
+    }
+  }, []);
 
   // Update page when filters change
   useEffect(() => {
@@ -206,10 +286,12 @@ export const usePropertySearch = () => {
     itemsPerPage,
     filters,
     likedProperties,
+    apiError,
     setFilters,
     performSearch,
     handlePageChange,
     handleItemsPerPageChange,
-    toggleLike
+    toggleLike,
+    fetchProperties, // Expose for manual refetching
   };
 };
