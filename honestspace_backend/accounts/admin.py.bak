@@ -1,0 +1,145 @@
+# accounts/admin.py
+from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from .models import User, UserType
+
+@admin.register(UserType)
+class UserTypeAdmin(admin.ModelAdmin):
+    list_display = ['name', 'description']
+    list_filter = ['name']
+    search_fields = ['name', 'description']
+
+@admin.register(User)
+class UserAdmin(BaseUserAdmin):
+    list_display = ['email', 'first_name', 'last_name', 'user_type', 'is_verified', 'date_joined']
+    list_filter = ['user_type', 'is_verified', 'is_staff', 'is_active', 'date_joined']
+    search_fields = ['email', 'first_name', 'last_name', 'phone']
+    ordering = ['-date_joined']
+    
+    fieldsets = BaseUserAdmin.fieldsets + (
+        ('Additional Info', {
+            'fields': ('phone', 'user_type', 'is_verified', 'profile_image', 'google_id')
+        }),
+    )
+    
+    add_fieldsets = BaseUserAdmin.add_fieldsets + (
+        ('Additional Info', {
+            'fields': ('email', 'phone', 'user_type', 'first_name', 'last_name')
+        }),
+    )
+
+# properties/admin.py
+from django.contrib import admin
+from .models import (
+    PropertyType, PropertyStatus, Property, PropertyLocation, 
+    PropertyMedia, Amenity, AmenityCategory, PropertyAmenity,
+    MediaType, LovedProperty
+)
+
+@admin.register(PropertyType)
+class PropertyTypeAdmin(admin.ModelAdmin):
+    list_display = ['name', 'category', 'description']
+    list_filter = ['category']
+
+@admin.register(PropertyStatus)
+class PropertyStatusAdmin(admin.ModelAdmin):
+    list_display = ['name', 'description']
+
+@admin.register(AmenityCategory)
+class AmenityCategoryAdmin(admin.ModelAdmin):
+    list_display = ['name', 'sort_order']
+    ordering = ['sort_order']
+
+@admin.register(Amenity)
+class AmenityAdmin(admin.ModelAdmin):
+    list_display = ['name', 'category', 'is_verifiable']
+    list_filter = ['category', 'is_verifiable']
+    search_fields = ['name', 'description']
+
+@admin.register(MediaType)
+class MediaTypeAdmin(admin.ModelAdmin):
+    list_display = ['name', 'max_file_size_mb', 'processing_required']
+
+class PropertyMediaInline(admin.TabularInline):
+    model = PropertyMedia
+    extra = 1
+
+class PropertyLocationInline(admin.StackedInline):
+    model = PropertyLocation
+    max_num = 1
+
+class PropertyAmenityInline(admin.TabularInline):
+    model = PropertyAmenity
+    extra = 1
+
+@admin.register(Property)
+class PropertyAdmin(admin.ModelAdmin):
+    list_display = [
+        'title', 'landlord', 'property_type', 'rent_amount', 
+        'status', 'is_verified', 'created_at'
+    ]
+    list_filter = [
+        'property_type', 'status', 'is_verified', 'is_furnished', 
+        'is_pet_friendly', 'created_at'
+    ]
+    search_fields = ['title', 'description', 'landlord__email']
+    ordering = ['-created_at']
+    readonly_fields = ['views_count', 'created_at', 'updated_at']
+    
+    inlines = [PropertyLocationInline, PropertyMediaInline, PropertyAmenityInline]
+    
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('landlord', 'title', 'description', 'property_type')
+        }),
+        ('Pricing', {
+            'fields': ('rent_amount', 'deposit_amount', 'utilities_included')
+        }),
+        ('Features', {
+            'fields': ('is_furnished', 'is_pet_friendly', 'property_size_sqft', 'availability_date')
+        }),
+        ('Verification', {
+            'fields': ('status', 'is_verified', 'verification_date', 'scout')
+        }),
+        ('Statistics', {
+            'fields': ('views_count', 'created_at', 'updated_at'),
+            'classes': ('collapse',)
+        })
+    )
+
+@admin.register(LovedProperty)
+class LovedPropertyAdmin(admin.ModelAdmin):
+    list_display = ['user', 'property', 'loved_at']
+    list_filter = ['loved_at']
+    search_fields = ['user__email', 'property__title']
+
+# core/admin.py
+from django.contrib import admin
+from .models import Country, County, City, Neighborhood
+
+@admin.register(Country)
+class CountryAdmin(admin.ModelAdmin):
+    list_display = ['name', 'code', 'currency_code', 'phone_prefix']
+    search_fields = ['name', 'code']
+    ordering = ['name']
+
+@admin.register(County)
+class CountyAdmin(admin.ModelAdmin):
+    list_display = ['name', 'code', 'country']
+    list_filter = ['country']
+    search_fields = ['name', 'code']
+    ordering = ['country', 'name']
+
+@admin.register(City)
+class CityAdmin(admin.ModelAdmin):
+    list_display = ['name', 'county', 'postal_code_prefix']
+    list_filter = ['county__country', 'county']
+    search_fields = ['name', 'postal_code_prefix']
+    ordering = ['county', 'name']
+
+@admin.register(Neighborhood)
+class NeighborhoodAdmin(admin.ModelAdmin):
+    list_display = ['name', 'city', 'safety_rating']
+    list_filter = ['city__county__country', 'city__county', 'city']
+    search_fields = ['name']
+    ordering = ['city', 'name']
