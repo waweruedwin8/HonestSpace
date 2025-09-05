@@ -5,7 +5,8 @@ from builtins import property as builtin_property
 from django.utils import timezone
 from decimal import Decimal
 import uuid
-
+from django.utils.functional import cached_property as builtin_property
+from django.contrib.gis.geos import Point
 
 class PropertyType(models.Model):
     """Types of properties"""
@@ -196,78 +197,71 @@ class Property(models.Model):
             from django.utils.text import slugify
             self.slug = slugify(f"{self.title}-{self.id}")
         super().save(*args, **kwargs)
+
 class PropertyLocation(models.Model):
     """Property location details"""
     property = models.OneToOneField(
-        Property,
+        "Property",
         on_delete=models.CASCADE,
-        related_name='location'
+        related_name="location"
     )
+
+    # Address
     address_line_1 = models.CharField(max_length=255, blank=True)
     address_line_2 = models.CharField(max_length=255, blank=True, null=True)
     postal_code = models.CharField(max_length=20, blank=True, null=True)
     neighborhood = models.ForeignKey(
-        'core.Neighborhood',
+        "core.Neighborhood",
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='property_locations'
+        related_name="property_locations"
     )
-    
+
+    # Geographic coordinates
+    location = gis_models.PointField(null=True, blank=True)  # store lat/lng
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     google_maps_link = models.URLField(blank=True, null=True)
 
-    def __str__(self):
-        return f"{self.address_line_1}, {self.postal_code or ''}"
-
-# class PropertyLocation(models.Model):
-#     """Property location details"""
-#     property = models.OneToOneField(
-#         Property,
-#         on_delete=models.CASCADE,
-#         related_name='location'
-#     )
-    
-    # Address
-    address_line_1 = models.CharField(max_length=200)
-    address_line_2 = models.CharField(max_length=200, blank=True)
-    neighborhood = models.ForeignKey(
-        'core.Neighborhood',
-        on_delete=models.PROTECT,
-        related_name='properties'
-    )
-    postal_code = models.CharField(max_length=20, blank=True)
-    
-    # Geographic coordinates
-    location = gis_models.PointField()
-    
     # Verification
     address_verified = models.BooleanField(default=False)
     coordinates_verified = models.BooleanField(default=False)
-    
+
     # Accessibility
     public_transport_distance_m = models.PositiveIntegerField(blank=True, null=True)
     main_road_distance_m = models.PositiveIntegerField(blank=True, null=True)
-    
+
     class Meta:
-        db_table = 'property_locations'
-    
+        db_table = "property_locations"
+
     def __str__(self):
         return f"Location for {self.property.title}"
-    
+
     @builtin_property
     def full_address(self):
-        parts = [self.address_line_1]
+        parts = []
+        if self.address_line_1:
+            parts.append(self.address_line_1)
         if self.address_line_2:
             parts.append(self.address_line_2)
-        parts.extend([
-            self.neighborhood.name,
-            self.neighborhood.city.name,
-            self.neighborhood.city.county.name
-        ])
-        return ', '.join(parts)
+        if self.neighborhood:
+            parts.append(self.neighborhood.name)
+            if self.neighborhood.city:
+                parts.append(self.neighborhood.city.name)
+                if self.neighborhood.city.county:
+                    parts.append(self.neighborhood.city.county.name)
+        return ", ".join(parts)
 
+    def save(self, *args, **kwargs):
+        # Keep GIS Point in sync with latitude/longitude
+        if self.latitude and self.longitude:
+            self.location = Point(float(self.longitude), float(self.latitude))
+        elif self.location:
+            # If Point exists but lat/lng fields are empty, sync them
+            self.latitude = self.location.y
+            self.longitude = self.location.x
+        super().save(*args, **kwargs)
 
 class PropertyMedia(models.Model):
     """Property images and videos"""

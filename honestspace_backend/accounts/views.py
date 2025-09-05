@@ -30,16 +30,16 @@ class UserProfileView(APIView):
             "user_type": getattr(user.user_type, "name", "") if hasattr(user, "user_type") else "",
         }
         return Response(data)
-class LogoutView(APIView):
-    permission_classes = [IsAuthenticated]
+# class LogoutView(APIView):
+#     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
-        try:
-            refresh_token = request.data["refresh"]
-            token = RefreshToken(refresh_token)
-            token.blacklist()
-            return Response({"detail": "Logout successful."}, status=status.HTTP_205_RESET_CONTENT)
-        except KeyError:
-            return Response({"error": "Refresh token is required."}, status=status.HTTP_400_BAD_REQUEST)
-        except TokenError:
-            return Response({"error": "Invalid or expired token."}, status=status.HTTP_400_BAD_REQUEST)
+#     def post(self, request):
+#         try:
+#             refresh_token = request.data["refresh"]
+#             token = RefreshToken(refresh_token)
+#             token.blacklist()
+#             return Response({"detail": "Logout successful."}, status=status.HTTP_205_RESET_CONTENT)
+#         except KeyError:
+#             return Response({"error": "Refresh token is required."}, status=status.HTTP_400_BAD_REQUEST)
+#         except TokenError:
+#             return Response({"error": "Invalid or expired token."}, status=status.HTTP_400_BAD_REQUEST)

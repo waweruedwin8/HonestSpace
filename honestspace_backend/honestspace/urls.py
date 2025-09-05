@@ -7,7 +7,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenBlacklistView
 )
-from accounts.views import LogoutView
+#from accounts.views import LogoutView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,7 +29,7 @@ urlpatterns = [
     path('api/auth/jwt/create/', TokenObtainPairView.as_view(), name='jwt-create'),
     path('api/auth/jwt/refresh/', TokenRefreshView.as_view(), name='jwt-refresh'),
     path('api/auth/jwt/blacklist/', TokenBlacklistView.as_view(), name='jwt-blacklist'),
-    path('auth/logout/', LogoutView.as_view(), name='logout'),
+    #path('auth/logout/', LogoutView.as_view(), name='logout'), #served by blacklist endpoint
     # Other apps
     path('api/core/', include('core.urls')),
     path('api/properties/', include('properties.urls')),

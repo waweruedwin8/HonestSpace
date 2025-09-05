@@ -292,7 +292,6 @@ class PropertyCreateSerializer(serializers.ModelSerializer):
 
 class LovedPropertySerializer(serializers.ModelSerializer):
     property_details = PropertyListSerializer(source='property', read_only=True)
-    
     class Meta:
         model = LovedProperty
         fields = ['id', 'property', 'property_details', 'loved_at', 'notes']

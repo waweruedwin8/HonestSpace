@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HonestSpace Complete System Overview</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: #0f172a;
+            border-radius: 15px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            padding: 40px;
+            border: 2px solid #334155;
+        }
+
+        .title {
+            text-align: center;
+            color: #60a5fa;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 20px rgba(96, 165, 250, 0.5);
+        }
+
+        .section {
+            background: #1e293b;
+            border: 2px solid #475569;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 1.6em;
+            font-weight: 900;
+            margin-bottom: 25px;
+            color: #fbbf24;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 3px solid #fbbf24;
+            padding-bottom: 10px;
+        }
+
+        .flow-diagram {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            white-space: pre;
+            color: #e2e8f0;
+            background: #0f172a;
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            overflow-x: auto;
+        }
+
+        .entity {
+            color: #60a5fa;
+            font-weight: bold;
+        }
+
+        .relationship {
+            color: #34d399;
+            font-weight: bold;
+        }
+
+        .junction {
+            color: #fbbf24;
+            font-style: italic;
+        }
+
+        .lookup {
+            color: #f472b6;
+        }
+
+        .connector {
+            color: #94a3b8;
+        }
+
+        .stats-box {
+            background: #111827;
+            border: 3px solid #60a5fa;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 40px;
+            font-family: 'Courier New', monospace;
+            line-height: 1.8;
+            box-shadow: 0 0 30px rgba(96, 165, 250, 0.2);
+        }
+
+        .stats-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #60a5fa;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .highlight-primary { color: #60a5fa; font-weight: bold; }
+        .highlight-secondary { color: #34d399; font-weight: bold; }
+        .highlight-tertiary { color: #fbbf24; font-weight: bold; }
+        .highlight-accent { color: #f472b6; font-weight: bold; }
+
+        .branch-line {
+            color: #6b7280;
+        }
+
+        .core-business { border-left: 5px solid #60a5fa; }
+        .geographic { border-left: 5px solid #34d399; }
+        .scout { border-left: 5px solid #fbbf24; }
+        .payment { border-left: 5px solid #f472b6; }
+
+        @media (max-width: 768px) {
+            .flow-diagram {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🏠 HonestSpace Complete System</h1>
+        
+        <!-- Core Business Flow -->
+        <div class="section core-business">
+            <div class="section-title">Core Business Flow</div>
+            <div class="flow-diagram"><span class="highlight-primary">Users</span> <span class="relationship">──1:N──</span> <span class="highlight-primary">Properties</span> <span class="relationship">──1:N──</span> <span class="highlight-primary">Reviews</span>
+  <span class="branch-line">│</span>              <span class="branch-line">│</span>             <span class="branch-line">│</span>
+  <span class="branch-line">│</span>              <span class="branch-line">│</span>             <span class="branch-line">└──</span><span class="relationship">1:N</span><span class="branch-line">──</span> <span class="lookup">Review_Ratings</span>
+  <span class="branch-line">│</span>              <span class="branch-line">│</span>             <span class="branch-line">└──</span><span class="relationship">1:N</span><span class="branch-line">──</span> <span class="lookup">Review_Media</span>
+  <span class="branch-line">│</span>              <span class="branch-line">│</span>
+  <span class="branch-line">│</span>              <span class="branch-line">├──</span><span class="relationship">1:1</span><span class="branch-line">──</span> <span class="lookup">Property_Locations</span> <span class="relationship">──N:1──</span> <span class="highlight-secondary">Neighborhoods</span>
+  <span class="branch-line">│</span>              <span class="branch-line">├──</span><span class="relationship">1:N</span><span class="branch-line">──</span> <span class="lookup">Property_Media</span>
+  <span class="branch-line">│</span>              <span class="branch-line">├──</span><span class="relationship">M:N</span><span class="branch-line">──</span> <span class="highlight-accent">Amenities</span> <span class="junction">(via Property_Amenities)</span>
+  <span class="branch-line">│</span>              <span class="branch-line">└──</span><span class="relationship">M:N</span><span class="branch-line">──</span> <span class="highlight-accent">Trust_Badges</span> <span class="junction">(via Property_Trust_Badges)</span>
+  <span class="branch-line">│</span>
+  <span class="branch-line">├──</span><span class="relationship">1:N</span><span class="branch-line">──</span> <span class="highlight-tertiary">User_Subscriptions</span> <span class="relationship">──1:N──</span> <span class="highlight-tertiary">Payment_Transactions</span>
+  <span class="branch-line">├──</span><span class="relationship">1:N</span><span class="branch-line">──</span> <span class="highlight-tertiary">Scout_Applications</span> <span class="relationship">──1:N──</span> <span class="highlight-tertiary">Verification_Reports</span>
+  <span class="branch-line">└──</span><span class="relationship">M:N</span><span class="branch-line">──</span> <span class="highlight-primary">Properties</span> <span class="junction">(via Loved_Properties)</span></div>
+        </div>
+
+        <!-- Geographic Hierarchy -->
+        <div class="section geographic">
+            <div class="section-title">Geographic Hierarchy</div>
+            <div class="flow-diagram"><span class="highlight-secondary">Countries</span> <span class="relationship">──1:N──</span> <span class="highlight-secondary">Counties</span> <span class="relationship">──1:N──</span> <span class="highlight-secondary">Cities</span> <span class="relationship">──1:N──</span> <span class="highlight-secondary">Neighborhoods</span></div>
+        </div>
+
+        <!-- Scout Workflow -->
+        <div class="section scout">
+            <div class="section-title">Scout Workflow</div>
+            <div class="flow-diagram"><span class="highlight-tertiary">Scout_Applications</span> <span class="relationship">──1:N──</span> <span class="highlight-tertiary">Verification_Reports</span> <span class="relationship">──1:N──</span> <span class="lookup">Assessments</span>
+                 <span class="branch-line">│</span>                              <span class="branch-line">│</span>
+                 <span class="branch-line">├──</span><span class="relationship">M:N</span><span class="branch-line">──</span> <span class="lookup">Languages</span>             <span class="branch-line">├──</span> <span class="lookup">Infrastructure_Assessments</span>
+                 <span class="branch-line">├──</span><span class="relationship">M:N</span><span class="branch-line">──</span> <span class="lookup">Expertise_Areas</span>       <span class="branch-line">├──</span> <span class="lookup">Safety_Assessments</span>
+                 <span class="branch-line">└──</span><span class="relationship">1:N</span><span class="branch-line">──</span> <span class="lookup">Documents</span>             <span class="branch-line">└──</span> <span class="lookup">Verification_Photos</span></div>
+        </div>
+
+        <!-- Payment Flow -->
+        <div class="section payment">
+            <div class="section-title">Payment Flow</div>
+            <div class="flow-diagram"><span class="highlight-primary">Users</span> <span class="relationship">──1:N──</span> <span class="highlight-accent">User_Subscriptions</span> <span class="relationship">──1:N──</span> <span class="highlight-accent">Payment_Transactions</span>
+         <span class="branch-line">│</span>            <span class="branch-line">│</span>                    <span class="branch-line">│</span>
+         <span class="branch-line">│</span>            <span class="branch-line">│</span>                    <span class="branch-line">└──</span> <span class="lookup">Payment_Methods</span>
+         <span class="branch-line">│</span>            <span class="branch-line">│</span>                    <span class="branch-line">└──</span> <span class="lookup">Payment_Status</span>
+         <span class="branch-line">│</span>            <span class="branch-line">│</span>
+         <span class="branch-line">│</span>            <span class="branch-line">└──</span> <span class="lookup">Subscription_Types</span> <span class="relationship">──M:N──</span> <span class="lookup">Subscription_Features</span></div>
+        </div>
+
+        <!-- Statistics Box -->
+        <div class="stats-box">
+            <div class="stats-title">📊 Database Statistics</div>
+            <div class="flow-diagram">┌─────────────────────────────────────┐
+│ <span class="highlight-primary">DATABASE STATISTICS</span>                 │
+├─────────────────────────────────────┤
+│ <span class="highlight-secondary">Total Tables:</span> 47                    │
+│ <span class="highlight-secondary">Core Entities:</span> 7                    │
+│ <span class="highlight-secondary">Lookup Tables:</span> 25                   │
+│ <span class="highlight-secondary">Junction Tables:</span> 12                 │
+│ <span class="highlight-secondary">Detail/Support Tables:</span> 13           │
+│                                     │
+│ <span class="highlight-tertiary">Key Relationships:</span>                  │
+│ • 15 One-to-Many <span class="relationship">(1:N)</span>              │
+│ • 8  Many-to-Many <span class="relationship">(M:N)</span>             │
+│ • 3  One-to-One <span class="relationship">(1:1)</span>               │
+└─────────────────────────────────────┘</div>
+        </div>
+    </div>
+</body>
+</html>
