@@ -1,11 +1,17 @@
 import { Button } from "./ui/button";
-import { Menu, Home, User, Heart } from "lucide-react";
+import { Menu, Home, User, Heart, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
 import { LoveButton } from "./LoveButton";
 import { usePropertySearch } from "@/hooks/usePropertySearch";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const Header = () => {
   const { likedProperties } = usePropertySearch();
+  const { user, isAuthenticated, logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+  };
   
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
@@ -41,9 +47,26 @@ export const Header = () => {
               <LoveButton likedProperties={likedProperties} />
             </div>
             
-            <Button asChild variant="outline" className="hidden md:flex">
-              <Link to="/auth">Sign In</Link>
-            </Button>
+            {isAuthenticated ? (
+              <div className="hidden md:flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">
+                  Welcome, {user?.firstName}
+                </span>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={handleLogout}
+                  className="flex items-center gap-2"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Logout
+                </Button>
+              </div>
+            ) : (
+              <Button asChild variant="outline" className="hidden md:flex">
+                <Link to="/auth">Sign In</Link>
+              </Button>
+            )}
             
             <Link to="/list-property">
               <Button variant="trust">

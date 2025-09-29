@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { apiClient } from '@/lib/api';
 
 export interface User {
@@ -45,6 +46,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Route users based on their type
+  const redirectUserByType = (user: User) => {
+    // Don't redirect if user is already on their correct dashboard
+    const currentPath = location.pathname;
+    const isDashboardRoute = ['/landlord', '/scout', '/admin'].includes(currentPath);
+    
+    switch (user.userType) {
+      case 'landlord':
+        if (!isDashboardRoute || currentPath !== '/landlord') {
+          navigate('/landlord');
+        }
+        break;
+      case 'scout':
+        if (!isDashboardRoute || currentPath !== '/scout') {
+          navigate('/scout');
+        }
+        break;
+      case 'admin':
+        if (!isDashboardRoute || currentPath !== '/admin') {
+          navigate('/admin');
+        }
+        break;
+      case 'tenant':
+      default:
+        // Tenants stay on main app, only redirect if on auth page
+        if (currentPath === '/auth') {
+          navigate('/');
+        }
+        break;
+    }
+  };
 
   // Initialize auth state
   useEffect(() => {
@@ -58,6 +93,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           const response = await apiClient.getProfile();
           setUser(response.data);
           setIsAuthenticated(true);
+          redirectUserByType(response.data);
         } catch (error) {
           // Token might be expired, try refresh
           if (refreshToken) {
@@ -69,6 +105,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               const profileResponse = await apiClient.getProfile();
               setUser(profileResponse.data);
               setIsAuthenticated(true);
+              redirectUserByType(profileResponse.data);
             } catch (refreshError) {
               // Refresh failed, clear auth state
               await clearAuthState();
@@ -106,6 +143,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       setUser(response.data.user);
       setIsAuthenticated(true);
+      redirectUserByType(response.data.user);
       
       return {};
     } catch (error) {
@@ -133,6 +171,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       setUser(response.data.user);
       setIsAuthenticated(true);
+      redirectUserByType(response.data.user);
       
       return {};
     } catch (error) {
@@ -156,6 +195,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       setUser(response.data.user);
       setIsAuthenticated(true);
+      redirectUserByType(response.data.user);
       
       return {};
     } catch (error) {
@@ -173,6 +213,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error('Logout error:', error);
     } finally {
       await clearAuthState();
+      navigate('/auth');
     }
   };
 
