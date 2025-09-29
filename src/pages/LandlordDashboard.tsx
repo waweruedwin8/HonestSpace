@@ -6,6 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
+import { PropertyFormModal } from "@/components/modals/PropertyFormModal";
+import { InquiryModal } from "@/components/modals/InquiryModal";
+import { ApplicationModal } from "@/components/modals/ApplicationModal";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Home, 
   DollarSign, 
@@ -23,6 +27,22 @@ import {
 
 export const LandlordDashboard = () => {
   const { user } = useAuth();
+  const { toast } = useToast();
+  const [propertyModal, setPropertyModal] = useState<{
+    isOpen: boolean;
+    mode: 'add' | 'edit';
+    property?: any;
+  }>({ isOpen: false, mode: 'add' });
+  
+  const [inquiryModal, setInquiryModal] = useState<{
+    isOpen: boolean;
+    inquiry?: any;
+  }>({ isOpen: false });
+  
+  const [applicationModal, setApplicationModal] = useState<{
+    isOpen: boolean;
+    application?: any;
+  }>({ isOpen: false });
   
   // Mock data - will be replaced with real API calls
   const dashboardStats = {
@@ -207,7 +227,9 @@ export const LandlordDashboard = () => {
             <div className="space-y-6">
               <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-bold">Property Management</h2>
-                <Button>Add New Property</Button>
+                <Button onClick={() => setPropertyModal({ isOpen: true, mode: 'add' })}>
+                  Add New Property
+                </Button>
               </div>
               
               <div className="space-y-4">
@@ -244,13 +266,44 @@ export const LandlordDashboard = () => {
                         </div>
                         
                         <div className="flex gap-2">
-                          <Button variant="outline" size="sm">View Listing</Button>
-                          <Button variant="outline" size="sm">Edit Details</Button>
-                          <Button variant="outline" size="sm">Analytics</Button>
+                          <Button variant="outline" size="sm" onClick={() => {
+                            toast({ title: "Opening Property", description: "Redirecting to property listing..." });
+                          }}>
+                            View Listing
+                          </Button>
+                          <Button variant="outline" size="sm" onClick={() => {
+                            setPropertyModal({ isOpen: true, mode: 'edit', property });
+                          }}>
+                            Edit Details
+                          </Button>
+                          <Button variant="outline" size="sm" onClick={() => {
+                            toast({ title: "Analytics", description: "Opening property analytics..." });
+                          }}>
+                            Analytics
+                          </Button>
                           {property.status === 'active' ? (
-                            <Button variant="outline" size="sm">Manage Inquiries</Button>
+                            <Button variant="outline" size="sm" onClick={() => {
+                              setInquiryModal({ 
+                                isOpen: true, 
+                                inquiry: {
+                                  id: "1",
+                                  name: "Sarah M.",
+                                  phone: "+254 701 123 456",
+                                  email: "sarah.m@email.com",
+                                  property: property.title,
+                                  message: "Hi! I'm interested in viewing this property.",
+                                  date: "2 hours ago"
+                                }
+                              });
+                            }}>
+                              Manage Inquiries
+                            </Button>
                           ) : (
-                            <Button variant="outline" size="sm">Contact Scout</Button>
+                            <Button variant="outline" size="sm" onClick={() => {
+                              toast({ title: "Contacting Scout", description: "Opening scout communication..." });
+                            }}>
+                              Contact Scout
+                            </Button>
                           )}
                         </div>
                       </div>
@@ -281,10 +334,37 @@ export const LandlordDashboard = () => {
                       </div>
                       <p className="text-sm mb-3 bg-muted p-3 rounded">"Hi! I'm interested in viewing this property. I work in tech and looking to move by end of month. When can I schedule a viewing?"</p>
                       <div className="flex gap-2">
-                        <Button size="sm">Reply</Button>
-                        <Button variant="outline" size="sm">Schedule Viewing</Button>
-                        <Button variant="outline" size="sm">Send Property Details</Button>
-                        <Button variant="outline" size="sm">Decline Politely</Button>
+                        <Button size="sm" onClick={() => {
+                          setInquiryModal({ 
+                            isOpen: true, 
+                            inquiry: {
+                              id: "1",
+                              name: "Sarah M.",
+                              phone: "+254 701 123 456",
+                              email: "sarah.m@email.com",
+                              property: "Westlands 2BR Modern",
+                              message: "Hi! I'm interested in viewing this property. I work in tech and looking to move by end of month. When can I schedule a viewing?",
+                              date: "2 hours ago"
+                            }
+                          });
+                        }}>
+                          Reply
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={() => {
+                          toast({ title: "Scheduling", description: "Opening viewing scheduler..." });
+                        }}>
+                          Schedule Viewing
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={() => {
+                          toast({ title: "Details Sent", description: "Property details sent to inquirer." });
+                        }}>
+                          Send Property Details
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={() => {
+                          toast({ title: "Declined", description: "Polite decline message sent." });
+                        }}>
+                          Decline Politely
+                        </Button>
                       </div>
                     </div>
                   </div>
@@ -368,8 +448,29 @@ export const LandlordDashboard = () => {
                     </div>
                   </div>
                   <div className="mt-6 flex gap-2">
-                    <Button>Accept Application</Button>
-                    <Button variant="outline">Request Missing Documents</Button>
+                    <Button onClick={() => {
+                      setApplicationModal({ 
+                        isOpen: true, 
+                        application: {
+                          id: "1",
+                          name: "Sarah Mwangi",
+                          phone: "+254 701 123 456",
+                          email: "sarah.mwangi@techcorp.ke",
+                          property: "Westlands 2BR",
+                          company: "TechCorp Kenya Ltd.",
+                          position: "Software Developer",
+                          income: "$1,200/month",
+                          documents: []
+                        }
+                      });
+                    }}>
+                      Review Application
+                    </Button>
+                    <Button variant="outline" onClick={() => {
+                      toast({ title: "Documents Requested", description: "Missing document request sent." });
+                    }}>
+                      Request Missing Documents
+                    </Button>
                     <Button variant="outline">Schedule Interview</Button>
                     <Button variant="destructive">Decline Application</Button>
                   </div>
@@ -445,6 +546,25 @@ export const LandlordDashboard = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      <PropertyFormModal
+        isOpen={propertyModal.isOpen}
+        onClose={() => setPropertyModal({ isOpen: false, mode: 'add' })}
+        property={propertyModal.property}
+        mode={propertyModal.mode}
+      />
+
+      <InquiryModal
+        isOpen={inquiryModal.isOpen}
+        onClose={() => setInquiryModal({ isOpen: false })}
+        inquiry={inquiryModal.inquiry}
+      />
+
+      <ApplicationModal
+        isOpen={applicationModal.isOpen}
+        onClose={() => setApplicationModal({ isOpen: false })}
+        application={applicationModal.application}
+      />
     </DashboardLayout>
   );
 };

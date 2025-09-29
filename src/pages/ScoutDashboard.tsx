@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
+import { VerificationModal } from "@/components/modals/VerificationModal";
+import { useToast } from "@/hooks/use-toast";
 import { 
   MapPin, 
   Camera, 
@@ -21,6 +23,11 @@ import {
 
 export const ScoutDashboard = () => {
   const { user } = useAuth();
+  const { toast } = useToast();
+  const [verificationModal, setVerificationModal] = useState<{
+    isOpen: boolean;
+    property?: any;
+  }>({ isOpen: false });
   
   // Mock data - will be replaced with real API calls
   const scoutStats = {
@@ -155,11 +162,33 @@ export const ScoutDashboard = () => {
                             <span className="text-sm">Due: {assignment.dueDate}</span>
                           </div>
                           <div className="flex gap-2">
-                            <Button variant="outline" size="sm">
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => {
+                                toast({
+                                  title: "Opening Directions",
+                                  description: "Redirecting to Google Maps...",
+                                });
+                              }}
+                            >
                               <Navigation className="w-3 h-3 mr-1" />
                               Get Directions
                             </Button>
-                            <Button size="sm">Start Verification</Button>
+                            <Button 
+                              size="sm"
+                              onClick={() => setVerificationModal({
+                                isOpen: true,
+                                property: {
+                                  id: assignment.id,
+                                  title: assignment.property,
+                                  address: assignment.address,
+                                  landlord: assignment.landlord
+                                }
+                              })}
+                            >
+                              Start Verification
+                            </Button>
                           </div>
                         </div>
                       </div>
@@ -443,6 +472,13 @@ export const ScoutDashboard = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      <VerificationModal
+        isOpen={verificationModal.isOpen}
+        onClose={() => setVerificationModal({ isOpen: false })}
+        property={verificationModal.property}
+        mode="submit"
+      />
     </DashboardLayout>
   );
 };

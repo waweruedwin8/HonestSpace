@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
+import { VerificationModal } from "@/components/modals/VerificationModal";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Users, 
   Home, 
@@ -23,6 +25,11 @@ import {
 
 export const AdminDashboard = () => {
   const { user } = useAuth();
+  const { toast } = useToast();
+  const [verificationModal, setVerificationModal] = useState<{
+    isOpen: boolean;
+    property?: any;
+  }>({ isOpen: false });
   
   // Mock data - will be replaced with real API calls
   const adminStats = {
@@ -203,7 +210,21 @@ export const AdminDashboard = () => {
                             <Badge variant={verification.priority === 'high' ? 'destructive' : 'secondary'}>
                               {verification.priority}
                             </Badge>
-                            <Button size="sm" variant="outline">Review</Button>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => setVerificationModal({
+                                isOpen: true,
+                                property: {
+                                  id: verification.id,
+                                  title: verification.property,
+                                  address: "Property Address",
+                                  landlord: verification.landlord
+                                }
+                              })}
+                            >
+                              Review
+                            </Button>
                           </div>
                         </div>
                       ))}
@@ -264,12 +285,50 @@ export const AdminDashboard = () => {
                         </Badge>
                       </div>
                       
-                      <div className="flex gap-2">
-                        <Button variant="default" size="sm">Approve Verification</Button>
-                        <Button variant="outline" size="sm">Request Changes</Button>
-                        <Button variant="outline" size="sm">View Full Report</Button>
-                        <Button variant="destructive" size="sm">Reject</Button>
-                      </div>
+                        <div className="flex gap-2">
+                          <Button 
+                            variant="default" 
+                            size="sm"
+                            onClick={() => {
+                              toast({ title: "Verification Approved", description: "Property verification approved and published." });
+                            }}
+                          >
+                            Approve Verification
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => {
+                              toast({ title: "Changes Requested", description: "Change request sent to scout." });
+                            }}
+                          >
+                            Request Changes
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => setVerificationModal({
+                              isOpen: true,
+                              property: {
+                                id: verification.id,
+                                title: verification.property,
+                                address: "Property Address",
+                                landlord: verification.landlord
+                              }
+                            })}
+                          >
+                            View Full Report
+                          </Button>
+                          <Button 
+                            variant="destructive" 
+                            size="sm"
+                            onClick={() => {
+                              toast({ title: "Verification Rejected", description: "Property verification rejected.", variant: "destructive" });
+                            }}
+                          >
+                            Reject
+                          </Button>
+                        </div>
                     </CardContent>
                   </Card>
                 ))}
@@ -342,10 +401,41 @@ export const AdminDashboard = () => {
                         </div>
                         
                         <div className="flex gap-2">
-                          <Button size="sm">Approve Application</Button>
-                          <Button variant="outline" size="sm">Schedule Interview</Button>
-                          <Button variant="outline" size="sm">View Documents</Button>
-                          <Button variant="destructive" size="sm">Reject</Button>
+                          <Button 
+                            size="sm"
+                            onClick={() => {
+                              toast({ title: "Application Approved", description: "Scout application approved successfully." });
+                            }}
+                          >
+                            Approve Application
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => {
+                              toast({ title: "Interview Scheduled", description: "Interview invitation sent to applicant." });
+                            }}
+                          >
+                            Schedule Interview
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => {
+                              toast({ title: "Documents", description: "Opening document viewer..." });
+                            }}
+                          >
+                            View Documents
+                          </Button>
+                          <Button 
+                            variant="destructive" 
+                            size="sm"
+                            onClick={() => {
+                              toast({ title: "Application Rejected", description: "Scout application rejected.", variant: "destructive" });
+                            }}
+                          >
+                            Reject
+                          </Button>
                         </div>
                       </div>
                     ))}
@@ -589,6 +679,13 @@ export const AdminDashboard = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      <VerificationModal
+        isOpen={verificationModal.isOpen}
+        onClose={() => setVerificationModal({ isOpen: false })}
+        property={verificationModal.property}
+        mode="review"
+      />
     </DashboardLayout>
   );
 };
